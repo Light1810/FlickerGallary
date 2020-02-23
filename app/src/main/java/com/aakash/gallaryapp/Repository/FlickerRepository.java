@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.aakash.gallaryapp.BuildConfig;
 import com.aakash.gallaryapp.Model.FlickerResponse;
 import com.aakash.gallaryapp.Retrofit.FlickerApiInit;
 
@@ -18,7 +19,7 @@ public class FlickerRepository {
     private static FlickerApiInit flickerApiInit;
 
     private static String method = "flickr.photos.getRecent";
-    private static String API_KEY = "6f102c62f41998d151e5a1b48713cf13";
+    private static String API_KEY = BuildConfig.ApiKey;
     private static String format = "json";
     private static int noJsonCallback =1;
     private static String extra = "url_s";
