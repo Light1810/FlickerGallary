@@ -1,10 +1,12 @@
 package com.aakash.gallaryapp.Fragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -57,11 +59,13 @@ public class SearchFragment extends Fragment {
         btSearch = v.findViewById(R.id.btSearch);
         recyclerView=v.findViewById(R.id.rvImageGallery);
 
+
         btSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(etSearch.getText()!=null){
                     progressDialog.show();
+
 
                     flickerViewModel.searchImage(etSearch.getText().toString()).observe(getViewLifecycleOwner(), new Observer<FlickerResponse>() {
                         @Override
@@ -70,6 +74,9 @@ public class SearchFragment extends Fragment {
                             photoList.addAll(flickerResponse.getPhotos().getPhoto());
                             imageViewAdapter.notifyDataSetChanged();
                             progressDialog.dismiss();
+                            etSearch.setText("");
+                            etSearch.clearFocus();
+                            hideSoftKeyboard(getActivity());
 
                         }
                     });
@@ -97,10 +104,13 @@ public class SearchFragment extends Fragment {
         progressDialog.setCancelable(false);
 
 
+    }
 
-
-
-
-
+    public void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                getView().getWindowToken(), 0);
     }
 }

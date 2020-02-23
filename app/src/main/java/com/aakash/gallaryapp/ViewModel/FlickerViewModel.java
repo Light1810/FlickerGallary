@@ -19,7 +19,7 @@ public class FlickerViewModel extends ViewModel {
     }
 
     public LiveData<FlickerResponse> getAllImages(){
-        Log.d("HOME_FRAG","viewmodel"+ flickerRepository.getAllImages());
+
         return flickerRepository.getAllImages();
     }
 

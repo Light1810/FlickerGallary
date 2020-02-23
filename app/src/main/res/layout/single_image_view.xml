@@ -9,6 +9,7 @@
         android:layout_width="125sp"
         android:layout_height="125sp"
         android:layout_margin="10sp"
+        android:scaleType="centerCrop"
         app:srcCompat="@mipmap/ic_launcher">
 
     </ImageView>
