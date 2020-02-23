@@ -2,6 +2,7 @@ package com.aakash.gallaryapp.Adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aakash.gallaryapp.Activity.FullSizeImageActivity;
 import com.aakash.gallaryapp.Model.FlickerResponse;
 import com.aakash.gallaryapp.Model.Photo;
 import com.aakash.gallaryapp.R;
@@ -46,6 +48,15 @@ public class ImageViewAdapter extends RecyclerView.Adapter<ImageViewAdapter.Imag
 
        final String url = photoList.get(position).getUrlS();
         Glide.with(context).load(url).apply(new RequestOptions().override(150,150)).into(holder.singleImageView);
+
+        holder.singleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, FullSizeImageActivity.class);
+                intent.putExtra("url",url);
+                context.startActivity(intent);
+            }
+        });
 
 
     }
