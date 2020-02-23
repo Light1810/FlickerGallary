@@ -2,30 +2,24 @@ package com.aakash.gallaryapp.Fragment;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aakash.gallaryapp.Activity.MainActivity;
 import com.aakash.gallaryapp.Adapter.ImageViewAdapter;
 import com.aakash.gallaryapp.Model.FlickerResponse;
 import com.aakash.gallaryapp.Model.Photo;
 import com.aakash.gallaryapp.R;
 import com.aakash.gallaryapp.ViewModel.FlickerViewModel;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -35,6 +29,7 @@ public class HomeFragment extends Fragment {
     private ImageViewAdapter imageViewAdapter;
     private FlickerViewModel flickerViewModel;
     private List<Photo> photoList = new ArrayList<>();
+    private ProgressDialog progressDialog;
 
 
     public HomeFragment() {
@@ -55,7 +50,10 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        recyclerView=v.findViewById(R.id.rvImageGallery);
+
+        recyclerView=v.findViewById(R.id.rvImageGalleryHome);
+
+
 
 
         return v;
@@ -71,16 +69,20 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager( new GridLayoutManager(getContext(),3));
         recyclerView.setAdapter(imageViewAdapter);
 
-        flickerViewModel.getAllImages().observe(getViewLifecycleOwner(), new Observer<FlickerResponse>() {
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Please Wait..");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        flickerViewModel.getAllImages().observe(getViewLifecycleOwner(),new Observer<FlickerResponse>() {
             @Override
             public void onChanged(FlickerResponse flickerResponse) {
-              photoList.addAll(flickerResponse.getPhotos().getPhoto());
-              imageViewAdapter.notifyDataSetChanged();
+                photoList.addAll(flickerResponse.getPhotos().getPhoto());
+                imageViewAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
 
-                Log.d("HOME_FRAG", Arrays.toString(flickerResponse.getPhotos().getPhoto().toArray()));
             }
         });
-
 
 
     }

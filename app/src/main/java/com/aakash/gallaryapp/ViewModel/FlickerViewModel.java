@@ -1,5 +1,7 @@
 package com.aakash.gallaryapp.ViewModel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -17,7 +19,12 @@ public class FlickerViewModel extends ViewModel {
     }
 
     public LiveData<FlickerResponse> getAllImages(){
+        Log.d("HOME_FRAG","viewmodel"+ flickerRepository.getAllImages());
         return flickerRepository.getAllImages();
+    }
+
+    public LiveData<FlickerResponse> searchImage(String key){
+        return flickerRepository.getSearchResponse(key);
     }
 
 }

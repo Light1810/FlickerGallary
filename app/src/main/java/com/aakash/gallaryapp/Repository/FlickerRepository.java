@@ -1,5 +1,7 @@
 package com.aakash.gallaryapp.Repository;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.aakash.gallaryapp.Model.FlickerResponse;
@@ -15,7 +17,15 @@ public class FlickerRepository {
 
     private static FlickerApiInit flickerApiInit;
 
+    private static String method = "flickr.photos.getRecent";
+    private static String API_KEY = "6f102c62f41998d151e5a1b48713cf13";
+    private static String format = "json";
+    private static int noJsonCallback =1;
+    private static String extra = "url_s";
+    private static String methodSearch = "flickr.photos.search";
+
     private MutableLiveData<FlickerResponse> flickerResponseMutableLiveData;
+    private MutableLiveData<FlickerResponse> flickerSearchResponseMutableLiveData;
 
     public static FlickerRepository getInstance(){
         if(flickerRepository == null){
@@ -31,14 +41,16 @@ public class FlickerRepository {
 
     public MutableLiveData<FlickerResponse> getAllImages(){
 
-        final Call<FlickerResponse> getAllImage = flickerApiInit.getApi().getAllImages();
+        final Call<FlickerResponse> getAllImage = flickerApiInit.getApi().getImages(method,21,1,API_KEY,format,noJsonCallback,extra);
 
         flickerResponseMutableLiveData=new MutableLiveData<>();
         getAllImage.enqueue(new Callback<FlickerResponse>() {
             @Override
             public void onResponse(Call<FlickerResponse> call, Response<FlickerResponse> response) {
-                if(response.isSuccessful())
+                if(response.isSuccessful()){
                     flickerResponseMutableLiveData.setValue(response.body());
+                    Log.d("HOME_FRAG",response.body().toString());
+                }
                 else
                     flickerResponseMutableLiveData.setValue(null);
             }
@@ -54,4 +66,33 @@ public class FlickerRepository {
         });
         return flickerResponseMutableLiveData;
     }
+
+    public MutableLiveData<FlickerResponse> getSearchResponse(String imageKeyword){
+
+        final Call<FlickerResponse> searchImage = flickerApiInit.getApi().searchImages(methodSearch,21,1,API_KEY,format,noJsonCallback,extra,imageKeyword);
+        flickerSearchResponseMutableLiveData = new MutableLiveData<>();
+        searchImage.enqueue(new Callback<FlickerResponse>() {
+            @Override
+            public void onResponse(Call<FlickerResponse> call, Response<FlickerResponse> response) {
+                if(response.isSuccessful())
+                    flickerSearchResponseMutableLiveData.setValue(response.body());
+                else
+                    flickerSearchResponseMutableLiveData.setValue(null);
+
+            }
+
+            @Override
+            public void onFailure(Call<FlickerResponse> call, Throwable t) {
+
+                t.printStackTrace();
+
+                flickerSearchResponseMutableLiveData.setValue(null);
+
+
+            }
+        });
+
+       return flickerSearchResponseMutableLiveData;
+    }
+
 }
